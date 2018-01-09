@@ -1,33 +1,35 @@
 $(function () {
-    var agora = new Date();
-    var diasAno = 365;
-    var horasAno = 24 * diasAno;
-    var minutosAno = 60 * horasAno;
-    var segundosAno = 60 * minutosAno;
-    var milisegundosAno = 1000 * segundosAno;
-    var primeiroDiaAno = new Date(agora.getFullYear(), 0, 1, 0, 0, 0);
-    var ultimoDiaAno = new Date(agora.getFullYear(), 11, 31, 23, 59, 59);
-    var fimMes = new Date();
-    var fimSemana = new Date();
     var cronometros = document.querySelector('#cronometros');
+    var primeiroDiaAno = new Date(new Date().getFullYear(), 0, 1, 0, 0, 0);
+    var milisegundosAno = 1000 * 60 * 60 * 24 * quantidadeDiasAno(new Date().getFullYear());
+    var proximos = 5;
 
-    fimMes.setMonth(fimMes.getMonth() + 1, -1);
+    for (var percentil = 0; percentil <= 100; ++percentil) {
+        var percentual = percentil * (milisegundosAno - 1) / 100;
+        var dataPercentual = new Date(primeiroDiaAno.getTime() + percentual);
 
-    fimSemana.setHours(0);
-    fimSemana.setMinutes(0);
-    fimSemana.setSeconds(0);
+        if (new Date() < dataPercentual) {
+            var titulo = percentil + '% do ano em ' + formatarDataISO(dataPercentual);
+            cronometros.appendChild(criarCronometro(titulo, dataPercentual));
 
-    if (fimSemana.getDay() < 6) {
-        fimSemana.setMonth(fimSemana.getMonth(), fimSemana.getDate() + 5 - fimSemana.getDay());
-    } else {
-        fimSemana.setMonth(fimSemana.getMonth(), fimSemana.getDate() + 12 - fimSemana.getDay());
+            if (!--proximos) {
+                break;
+            }
+        }
     }
-
-    cronometros.appendChild(criarCronometro('Fim da semana', fimSemana));
-    cronometros.appendChild(criarCronometro('Fim do ano', ultimoDiaAno));
 
     $(".someTimer").TimeCircles();
 });
+
+function anoBissexto(ano) {
+
+    return new Date(ano, 1, 29).getDate() === 29;
+}
+
+function quantidadeDiasAno(ano) {
+
+    return anoBissexto(ano) ? 366 : 365;
+}
 
 function formatarDataISO(data) {
 
@@ -39,19 +41,23 @@ function formatarDataISO(data) {
             ('0' + data.getSeconds()).slice(-2);
 }
 
-function criarCronometro(titulo, data) {
-    var corpo = document.createElement('div');
+function criarCronometro(descricao, data, span) {
+    var titulo = document.createElement('h3');
     var legenda = document.createElement('div');
     var cronometro = document.createElement('div');
-    var tituloH3 = document.createElement('h3');
+    var corpo = document.createElement('div');
 
-    tituloH3.textContent = titulo;
+    titulo.textContent = descricao;
 
     legenda.style.textAlign = 'center';
-    legenda.appendChild(tituloH3);
+    legenda.appendChild(titulo);
 
     cronometro.classList.add('someTimer');
     cronometro.setAttribute('data-date', formatarDataISO(data));
+
+    if (parseFloat(span) > 0) {
+        cronometro.setAttribute('data-span', span);
+    }
 
     corpo.appendChild(legenda);
     corpo.appendChild(cronometro);

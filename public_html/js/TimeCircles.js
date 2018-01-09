@@ -160,8 +160,9 @@
             Minutes: (diff / 60) % 60,
             Seconds: diff % 60
         };
+
         var pct = {
-            Days: time.Days / 365,
+            Days: time.Days / this.data.attributes.data_span, // 7, // 365,
             Hours: time.Hours / 24,
             Minutes: time.Minutes / 60,
             Seconds: time.Seconds / 60
@@ -296,6 +297,9 @@
                 this.data.attributes.ref_date = this.config.ref_date;
             }
         }
+
+        var attrDataSpan = parseFloat($(this.element).attr('data-span'));
+        this.data.attributes.data_span = attrDataSpan > 0 ? attrDataSpan : 365;
 
         // Start running
         var _this = this;
