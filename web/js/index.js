@@ -9,7 +9,7 @@ $(function () {
         var dataPercentual = new Date(primeiroDiaAno.getTime() + percentual);
 
         if (new Date() < dataPercentual) {
-            var titulo = percentil + '% do ano em ' + formatarDataISO(dataPercentual);
+            var titulo = percentil + '% = ' + formatarData(dataPercentual);
             cronometros.appendChild(criarCronometro(titulo, dataPercentual));
 
             if (!--proximos) {
@@ -29,6 +29,16 @@ function anoBissexto(ano) {
 function quantidadeDiasAno(ano) {
 
     return anoBissexto(ano) ? 366 : 365;
+}
+
+function formatarData(data) {
+
+    return ('0' + data.getDate()).slice(-2) + '/' +
+            ('0' + (data.getMonth() + 1)).slice(-2) + '/' +
+            ('0000' + data.getFullYear()).slice(-4) + ' ' +
+            ('0' + data.getHours()).slice(-2) + ':' +
+            ('0' + data.getMinutes()).slice(-2) + ':' +
+            ('0' + data.getSeconds()).slice(-2);
 }
 
 function formatarDataISO(data) {
