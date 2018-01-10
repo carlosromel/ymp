@@ -52,7 +52,7 @@ function formatarDataISO(data) {
 }
 
 function criarCronometro(descricao, data, span) {
-    var titulo = document.createElement('h2');
+    var titulo = document.createElement('h4');
     var legenda = document.createElement('div');
     var cronometro = document.createElement('div');
     var corpo = document.createElement('div');
